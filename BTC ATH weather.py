@@ -2,7 +2,7 @@ import requests
 import matplotlib.pyplot as plt
 import numpy as np
 
-# BTC ATH data (trimmed to 2017+ for reliability)
+# BTC ATH data (2017+)
 ath_data = [
     {"date": "2017-12-17", "price": 19783.06},
     {"date": "2020-12-17", "price": 23770.00},
@@ -25,6 +25,8 @@ for date in dates:
     if "hourly" in response:
         temps = response["hourly"]["temperature_2m"]
         temp_avg = sum(temps) / len(temps) if temps else 0
+        # Sanity check: cap unrealistic temps
+        temp_avg = max(-10, min(40, temp_avg))
         weather_data.append({"date": date, "temp": temp_avg})
 
 # Fancy graph
