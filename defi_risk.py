@@ -1,22 +1,19 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import requests
+import pandas as pd
 
-# Dummy data: Replace with real DeFi stats later
-data = {
-    'Protocol': ['Aave', 'Maker'],
-    'FINMA_Score': [80, 70],
-    'TVL_USD': [5000000000, 8000000000]
-}
-df = pd.DataFrame(data)
+# Grab data from CoinGecko (top 10 coins)
+url = "https://api.coingecko.com/api/v3/coins/markets"
+params = {"vs_currency": "usd", "order": "market_cap_desc", "per_page": 10}
+data = requests.get(url, params=params).json()
 
-# Risk score: Inverse of compliance and TVL
-df['Risk_Score'] = 100 - df['FINMA_Score'] + (df['TVL_USD'].max() - df['TVL_USD']) / 1e9
+# Pull prices for the chart
+prices = [coin["current_price"] for coin in data]
 
-# Plot
-plt.bar(df['Protocol'], df['Risk_Score'], color='#FF4500')
-plt.title('DeFi Risk by Swiss Regs')
-plt.ylabel('Risk Score')
-plt.savefig('risk_plot.png')
-plt.show()
-
-print(df)
+# Plot the chart (replace your old data here)
+plt.plot(prices)
+plt.title("Top 10 Crypto Prices")
+plt.xlabel("Coin Rank")
+plt.ylabel("Price (USD)")
+plt.savefig("risk_plot.png")  # Saves the new chart
+plt.close()
